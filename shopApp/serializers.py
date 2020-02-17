@@ -3,11 +3,13 @@ from django.contrib.auth.models import User
 from shopApp.models import Product, Cart, Order
 
 class UserSerializer(serializers.ModelSerializer):
+    products = serializers.PrimaryKeyRelatedField(many=True, queryset=Product.objects.all())
     class Meta:
         model = User
-        fields='__all__'
+        fields = ['id', 'username', 'products','owner']
 
 class ProductSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Product
         fields='__all__'

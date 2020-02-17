@@ -1,0 +1,11 @@
+.container{
+  padding-top: 5%;
+  padding-bottom: 5%;
+}
+.custom-table-class{
+  background-image: url("https://res.cloudinary.com/demo/image/upload/bn_bg_wide.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: white;
+}
