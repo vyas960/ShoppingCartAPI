@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from shopApp.serializers import ProductSerializer
+from shopApp.serializers import ProductSerializer, ProductDetailSerializer
 from rest_framework.views import APIView
 
 from rest_framework.response import Response
@@ -23,7 +23,7 @@ from django.http import HttpResponse
 # Create your views here.
 def productListView(request):
 	return render(request,'shopApp/home.html')
- 
+
 def productDetailView(request):
 	return render(request,'shopApp/index.html')
 
@@ -39,28 +39,14 @@ class ProductList(mixins.ListModelMixin,mixins.CreateModelMixin,generics.Generic
 		return self.create(request, *args, **kwargs)
 
 #this view provide details based on id of products........
-class ProductDetail(APIView):
+class ProductDetail(generics.RetrieveAPIView):
+	queryset = Product.objects.all()
 	# permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
 
-	def get_object(self, pk):
-		try:
-			return Product.objects.get(pk=pk)
-		except Product.DoesNotExist:
-			raise Http404
-
 	def get(self, request, pk, format=None):
-		product = self.get_object(pk)
-		serializer = ProductSerializer(product)
-		data = []
-		data.append({
-			"id": serializer.data["id"],
-			"owner": serializer.data["owner"],
-			"item_name": serializer.data["item_name"],
-			"item_price": serializer.data["item_price"],
-			"item_image": serializer.data["item_image"],
-			"item_detail": serializer.data["item_detail"],
-		})
-		return Response(data)
+		product = self.get_object()
+		serializer = ProductDetailSerializer(product)
+		return Response(serializer.data)
 
 	# def post(self, request, pk, format=None):
 	# 	print("In post method")

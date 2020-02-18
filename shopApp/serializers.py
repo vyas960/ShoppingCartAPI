@@ -9,10 +9,14 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'products','owner']
 
 class ProductSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Product
-        fields='__all__'
+        fields = ['id', 'item_name']
+
+class ProductDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = "__all__"
 
 class CartSerializer(serializers.ModelSerializer):
     class Meta:

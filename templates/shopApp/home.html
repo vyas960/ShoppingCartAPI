@@ -61,19 +61,17 @@
          }
          function myFunction(id) {
            console.log(id);
-           $.get( "http://127.0.0.1:8000/products/"+id+"/", function( data ) {
+           $.get( "http://127.0.0.1:8000/products/"+id+"/", function( data ) {debugger
               console.log(data)
               var tr;
-              for (var i = 0; i < data.length; i++) {
                   tr = $('<tr>');
-                  tr.append("<td>" + data[i].id + "</td>");
-                  tr.append("<td>" + data[i].item_image + "</td>");
-                  tr.append("<td>" + data[i].item_name + "</td>");
-                  tr.append("<td>" + data[i].item_price + "</td>");
-                  tr.append("<td>" + data[i].item_detail + "</td>");
-                  tr.append("<td>" + data[i].owner + "</td>");
+                  tr.append("<td>" + data.id + "</td>");
+                  tr.append("<td>" + data.item_image + "</td>");
+                  tr.append("<td>" + data.item_name + "</td>");
+                  tr.append("<td>" + data.item_price + "</td>");
+                  tr.append("<td>" + data.item_detail + "</td>");
+                  tr.append("<td>" + data.owner + "</td>");
                   $('#detail').append(tr);
-              }
              });
 
          }
