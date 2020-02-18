@@ -1,46 +1,82 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  </head>
-  <body>
-    <h1>_____________________________________________________</h1>
-    <table>
-    <tr>
-        <th>User_Name</th>
-        <th>score</th>
-        <th>team</th>
-    </tr>
-</table>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <title></title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-<script>
-$(document).ready(function() {
- var json = [{
-   "User_Name": "John Doe",
-   "score": "10",
-   "team": "1"
- }, {
-   "User_Name": "Jane Smith",
-   "score": "15",
-   "team": "2"
- }, {
-   "User_Name": "Chuck Berry",
-   "score": "12",
-   "team": "2"
- }];
- var tr;
- for (var i = 0; i < json.length; i++) {
-   tr = $('<tr/>');
-   tr.append("<td>" + json[i].User_Name + "</td>");
-   tr.append("<td>" + json[i].score + "</td>");
-   tr.append("<td>" + json[i].team + "</td>");
-   $('table').append(tr);
- }
-});
+   </head>
+   <body>
+      <div class="container" align="center">
+         <hr>
+         <h1>PRODUCTS LIST</h1>
+         <hr>
 
-</script>
-  </body>
+         <table id="list" border=10px>
+            <tr>
+               <th>Products</th>
+               <th>Details</th>
+            </tr>
+         </table>
+
+         <div class="container" align="center">
+           <hr><h1>PRODUCT DETAIL</h1><hr>
+            <table id="detail" border=5px>
+               <tr>
+                  <th>PRODUCT ID</th>
+                  <th>PRODUCT IMAGE</th>
+                  <th>PRODUCT NAME</th>
+                  <th>PRODUCT PRICE</th>
+                  <th>PRODUCT DETAIL</th>
+                  <th>SELLER</th>
+               </tr>
+            </table>
+         </div>
+
+
+
+      </div>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script>
+         $.get( "http://127.0.0.1:8000/products/", function( data ) {
+            console.log(data)
+             appendDatas(data);
+           });
+         function appendDatas(data) {
+         // var mainContainer = document.getElementById("myData");
+         var tr;
+         for (var i = 0; i < data.length; i++) {
+             tr = $('<tr/>');
+             tr.append("<td>" + data[i].item_name + "</td>");
+
+             let id = data[i].id
+             console.log(id)
+              var url = "http://127.0.0.1:8000/products/"+id
+             tr.append('<td><button onclick="myFunction('+ id +')">Click me</button></td>')
+
+             // tr.append("<td><a href = " + url + ">" + 'Detail' + "</a></td>") var url = "http://127.0.0.1:8000/products/"+id
+             $('#list').append(tr);
+         }
+         }
+         function myFunction(id) {
+           console.log(id);
+           $.get( "http://127.0.0.1:8000/products/"+id+"/", function( data ) {
+              console.log(data)
+              var tr;
+              for (var i = 0; i < data.length; i++) {
+                  tr = $('<tr>');
+                  tr.append("<td>" + data[i].id + "</td>");
+                  tr.append("<td>" + data[i].item_image + "</td>");
+                  tr.append("<td>" + data[i].item_name + "</td>");
+                  tr.append("<td>" + data[i].item_price + "</td>");
+                  tr.append("<td>" + data[i].item_detail + "</td>");
+                  tr.append("<td>" + data[i].owner + "</td>");
+                  $('#detail').append(tr);
+              }
+             });
+
+         }
+      </script>
+   </body>
 </html>

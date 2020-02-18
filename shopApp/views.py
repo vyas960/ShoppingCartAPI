@@ -21,19 +21,24 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 
 # Create your views here.
-def homeView(request):
+def productListView(request):
+	return render(request,'shopApp/home.html')
+ 
+def productDetailView(request):
 	return render(request,'shopApp/index.html')
 
-#this view provide list of products........
-class ProductListView(ListView):
-	model = Product
-	# paginate_by = 5
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		context['now'] = timezone.now()
-		return context
+class ProductList(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
+	queryset = Product.objects.all()
+	serializer_class= ProductSerializer
+	#permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
+	#permission_classes = (IsAuthenticated,)
 
+	def get(self, request, *args, **kwargs):
+		return self.list(request, *args, **kwargs)
+	def post(self, request, *args, **kwargs):
+		return self.create(request, *args, **kwargs)
 
+#this view provide details based on id of products........
 class ProductDetail(APIView):
 	# permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
 
@@ -57,21 +62,10 @@ class ProductDetail(APIView):
 		})
 		return Response(data)
 
-	def post(self, request, pk, format=None):
-		print("In post method")
-		return HttpResponse("success")
-
-# class ProductDetailView(DetailView):
-#     model = Product
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['now'] = timezone.now()
-#         return context
-
-
-
-
-
+	# def post(self, request, pk, format=None):
+	# 	print("In post method")
+	# 	return HttpResponse("success")
+	#
 	# def put(self, request, pk, format=None):
 	# 	product = self.get_object(pk)
 	# 	serializer = ProductSerializer(product, data=request.data)
@@ -86,17 +80,12 @@ class ProductDetail(APIView):
 	# 	return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# from rest_framework import viewsets
-# class ProductDetailViewSet(viewsets.ReadOnlyModelViewSet):
-#     queryset = Product.objects.get(id=id)
+# class UserList(generics.ListAPIView):
+#     queryset = User.objects.all()
+#     # serializer_class = UserSerializer
+# class UserDetail(generics.RetrieveAPIView):
+#     queryset = User.objects.all()
 #     serializer_class = UserSerializer
-
-class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    # serializer_class = UserSerializer
-class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
 # @api_view(['GET'])
 # def api_root(request, format=None):
@@ -109,16 +98,7 @@ class UserDetail(generics.RetrieveAPIView):
 # 	serializer_class=ProductSerializer
 
 
-class ProductList(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
-	queryset = Product.objects.all()
-	serializer_class= ProductSerializer
-	permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
-	permission_classes = (IsAuthenticated,)
 
-	def get(self, request, *args, **kwargs):
-		return self.list(request, *args, **kwargs)
-	def post(self, request, *args, **kwargs):
-		return self.create(request, *args, **kwargs)
 
 
 # class ProductList(APIView):

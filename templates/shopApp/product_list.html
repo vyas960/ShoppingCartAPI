@@ -24,24 +24,78 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script type="text/javascript">
-  
+
 
   $( ".product_name" ).click(function() {
       var id = this.getAttribute("name")
-      var url = "http://127.0.0.1:8000/" + id + "/" 
-      var data = {
-        "name": "ashutosh",
-        "csrfmiddlewaretoken": "{{ csrf_token }}"
-      }
-      $.ajax({
-        url: url,
-        type: 'POST',
-        data: data,
-        success: function(response) {
-            // debugger
-        }
-      });
+      var url = "http://127.0.0.1:8000/" + id + "/"
 
+      $.get( url, function( data ) {debugger
+       console.log(data)
+      });
   });
 
 </script>
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title></title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+   </head>
+   <body>
+
+      <div class="container" align="left">
+         <table border=5px>
+
+
+
+            <tr>
+               <th>id</th>
+               <th>product name</th>
+               <th>price </th>
+
+            </tr>
+
+         </table>
+      </div>
+ </form>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script>
+         fetch('http://localhost:8000/Product/')
+             .then(function (response){
+                 return response.json();
+             })
+             .then(function (data) {
+                 appendData(data);
+             })
+             .catch(function (err) {
+                 console.log('error: ' + err);
+             });
+
+         function appendData(data) {
+             var mainContainer = document.getElementById("myData");
+             var tr;
+             for (var i = 0; i < data.length; i++) {
+                 debugger;
+                 tr = $('<tr/>');
+                 tr.append("<td>" + data[i].id + "</td>");
+                 tr.append("<td>" + data[i].pname + "</td>");
+                 tr.append("<td>" + data[i].price + "</td>");
+                 // var mylink = "SnippetDetail/" + 'data[i].id'
+                  var url = "ProductDetail/"+data[i].id;
+                 // var url = "cart/"+data[i].id
+                 tr.append("<a href = " + url + ">" + 'Addcart' + '</a>')
+                 $('table').append(tr);
+             }
+         }
+      </script>
+
+   </body>
+</html>  -->
