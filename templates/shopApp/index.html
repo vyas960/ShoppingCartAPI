@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
    <head>
       <meta charset="UTF-8">
@@ -44,54 +44,4 @@
          }
       </script>
    </body>
-</html>
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title></title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-</head>
-<body>
-  <div class="container">
-    <table border=5px>
-      <tr>
-          <th>User_Name</th>
-          <th>score</th>
-          <th>team</th>
-      </tr>
-  </table>
-  </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script>
-        fetch('http://127.0.0.1:8000/products/')
-            .then(function (response){
-                return response.json();
-            })
-            .then(function (data) {
-                appendData(data);
-            })
-            .catch(function (err) {
-                console.log('error: ' + err);
-            });
-        function appendData(data) {
-            var mainContainer = document.getElementById("myData");
-            var tr;
-            for (var i = 0; i < data.length; i++) {
-                tr = $('<tr/>');
-                tr.append("<td>" + data[i].id + "</td>");
-                tr.append("<td>" + data[i].item_image + "</td>");
-                tr.append("<td>" + data[i].item_name + "</td>");
-                $('table').append(tr);
-                // var div = document.createElement("div");
-                // div.innerHTML = '<b>PRODUCT ID</b> : ' + data[i].id + '<br><b>PRODUCT Image</b> : ' + data[i].item_image + ' <br><b>PRODUCT NAME</b> : ' + data[i].item_name + ' <br><b>PRODUCT PRICE</b> : ' + data[i].item_price + ' <br><b>PRODUCT DETAIL</b> : ' + data[i].item_detail ;
-                // mainContainer.appendChild(div);
-            }
-        }
-    </script>
-</body>
 </html> -->

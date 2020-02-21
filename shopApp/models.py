@@ -7,8 +7,8 @@ class Product(models.Model):
 	item_name=models.CharField(max_length=250)
 	item_detail=models.CharField(max_length=250)
 	item_price=models.FloatField()
-	item_image=models.ImageField()
-	owner = models.ForeignKey('auth.User', related_name='products', on_delete=models.CASCADE)
+	item_image=models.ImageField(blank=True, null=True)
+	owner = models.ForeignKey('auth.User', related_name='products', on_delete=models.CASCADE,blank=True, null=True)
 
 	def __str__(self):
 		return self.item_name

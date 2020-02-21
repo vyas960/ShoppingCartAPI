@@ -2,28 +2,40 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from shopApp.models import Product, Cart, Order
 
+
 class UserSerializer(serializers.ModelSerializer):
     products = serializers.PrimaryKeyRelatedField(many=True, queryset=Product.objects.all())
     class Meta:
         model = User
         fields = ['id', 'username', 'products','owner']
 
-class ProductSerializer(serializers.ModelSerializer):
+
+class ProductListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'item_name']
 
+
 class ProductDetailSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Product
-        fields = "__all__"
+        fields = '__all__'
 
-class CartSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Cart
-        fields='__all__'
 
-class OrderSerializer(serializers.ModelSerializer):
+class ProductDestroySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Order
-        fields='__all__'
+        model = Product
+        fields = '__all__'
+
+
+class ProductCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+
+class ProductUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'

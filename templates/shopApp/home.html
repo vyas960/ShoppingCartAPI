@@ -1,50 +1,80 @@
+{% extends 'shopApp/base.html'%}
 <!DOCTYPE html>
-<html lang="en">
+{% block body_block%}
+
+<!-- <html lang="en">
    <head>
       <meta charset="UTF-8">
       <title></title>
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
    </head>
-   <body>
-      <div class="container" align="center">
-         <hr>
-         <h1>PRODUCTS LIST</h1>
-         <hr>
+   <body> -->
 
+      <div class="container" align="center">
+         <hr><h1>PRODUCTS LIST</h1><hr>
          <table id="list" border=10px>
+           <thead>
+             <th>PRODUCTS</th>
+             <th>DETAILS</th>
+             <th>DELETE</th>
+             <th>UPDATE</th>
+           </thead>
             <tr>
-               <th>Products</th>
-               <th>Details</th>
             </tr>
          </table>
 
+         <hr><button class="btn-lg btn btn-dark">Create Product</button><hr>
+
          <div class="container" align="center">
-           <hr><h1>PRODUCT DETAIL</h1><hr>
-            <table id="detail" border=5px>
-               <tr>
-                  <th>PRODUCT ID</th>
-                  <th>PRODUCT IMAGE</th>
-                  <th>PRODUCT NAME</th>
-                  <th>PRODUCT PRICE</th>
-                  <th>PRODUCT DETAIL</th>
-                  <th>SELLER</th>
-               </tr>
-            </table>
+             <hr><h1>PRODUCT DETAIL</h1><hr>
+             <table border=10px>
+                 <thead>
+                    <th>PRODUCT ID</th>
+                    <th>PRODUCT IMAGE</th>
+                    <th>PRODUCT NAME</th>
+                    <th>PRODUCT PRICE</th>
+                    <th>PRODUCT DETAIL</th>
+                    <th>SELLER</th>
+                 </thead>
+                 <tr>
+                   <td id="ID"></td>
+                   <td id="IMAGE"></td>
+                   <!-- <td><img  id="IMAGE" src="smiley.gif" alt="Smiley face" height="42" width="42"></td> -->
+                   <td id="NAME"></td>
+                   <td id="PRICE"></td>
+                   <td id="DETAIL"></td>
+                   <td id="SELLER"></td>
+                 </tr>
+             </table><hr>
          </div>
 
-
+          <form id="new_product_form">
+            <div class="container" align="center">
+              <label for="name">Product Name:</label><br>
+              <input type="text" name="name" id="name" ><br>
+              <label for="detail">Product Detail:</label><br>
+              <input type="text" id="detail"><br>
+              <label for="price">Product Price:</label><br>
+              <input type="number" id="price"><br><br>
+              <label for="image">Select image:</label>
+              <input type="file" id="image" name="img" accept="image/*"><br><br>
+              <label for="Owner">Owner:</label><br>
+              <input type="text" id="owner" ><br><hr>
+              <button id="Save"type="submit" class="btn-success" >Create New Product </button><hr>
+              {{ csrf_token }}
+            </div>
+          </form>
 
       </div>
 
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
       <script>
          $.get( "http://127.0.0.1:8000/products/", function( data ) {
-            console.log(data)
-             appendDatas(data);
+             console.log(data)
+             appendData(data);
            });
-         function appendDatas(data) {
-         // var mainContainer = document.getElementById("myData");
+         function appendData(data) {
          var tr;
          for (var i = 0; i < data.length; i++) {
              tr = $('<tr/>');
@@ -52,29 +82,106 @@
 
              let id = data[i].id
              console.log(id)
-              var url = "http://127.0.0.1:8000/products/"+id
-             tr.append('<td><button onclick="myFunction('+ id +')">Click me</button></td>')
-
-             // tr.append("<td><a href = " + url + ">" + 'Detail' + "</a></td>") var url = "http://127.0.0.1:8000/products/"+id
+             tr.append('<td><button onclick="showDetail('+ id +')"class="btn-lg btn btn-dark">Product Detail</button></td>')
+             tr.append('<td><button onclick="destroy('+ id +')"class="btn-lg btn btn-dark">Delete Product</button></td>')
+             tr.append('<td><button onclick="update('+ id +')"class="btn-lg btn btn-dark">Update Product</button></td>')
              $('#list').append(tr);
          }
          }
-         function myFunction(id) {
+         function showDetail(id) {
            console.log(id);
-           $.get( "http://127.0.0.1:8000/products/"+id+"/", function( data ) {debugger
+           $.get( "http://127.0.0.1:8000/products/"+id+"/", function( data ) {
               console.log(data)
-              var tr;
-                  tr = $('<tr>');
-                  tr.append("<td>" + data.id + "</td>");
-                  tr.append("<td>" + data.item_image + "</td>");
-                  tr.append("<td>" + data.item_name + "</td>");
-                  tr.append("<td>" + data.item_price + "</td>");
-                  tr.append("<td>" + data.item_detail + "</td>");
-                  tr.append("<td>" + data.owner + "</td>");
-                  $('#detail').append(tr);
+                  $('#ID').text(data.id);
+                  $('#IMAGE').text(data.item_image);
+                  $('#NAME').text(data.item_name);
+                  $('#PRICE').text(data.item_price);
+                  $('#DETAIL').text(data.item_detail);
+                  $('#SELLER').text(data.owner);
              });
-
          }
-      </script>
+         function destroy(id) {
+           console.log(id);
+           url = "http://127.0.0.1:8000/products/"+id+"/destroy/"
+           data = {csrfmiddlewaretoken: "{{ csrf_token }}" }
+           debugger
+             $.ajax({
+                url: url,
+                type:"DELETE",
+                data: data,
+                success: function (data) {
+                    alert("A Product has been deleted.");
+                }
+                    });
+            }
+
+            $(document).ready(function () {
+             $("#Save").click(function () {
+               var person = new Object();
+                  person.pname = $('#name').val();
+                  person.price = $('#price').val();
+                  person.product_detail = $('#detail').val();
+                  person.owner = $('#owner').val();
+                  console.log(person)
+                  var formData = new FormData();
+                  var file = $('#image')[0].files[0]
+                  var token = "{{ csrf_token }}"
+                  formData.append("item_image", file, file.name);
+                  formData.append("item_name", person.pname);
+                  formData.append("item_price", person.price);
+                  formData.append("item_detail", person.product_detail);
+                  formData.append("owner", person.owner);
+                  formData.append("csrfmiddlewaretoken", token);
+                  url = 'http://127.0.0.1:8000/create/'
+                  debugger
+                       $.ajax({
+                        type: "POST",
+                        enctype: 'multipart/form-data',
+                        url:url,
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        timeout: 600000,
+                        success: function (data) {
+                          alert('product add successfully')
+                            console.log("SUCCESS : ", data);
+                        },
+                        error: function (data) {
+                          alert('something went wrong')
+                            console.log("ERROR : ", e);
+                        }
+                    });
+                   });
+              });
+
+            // $( "#new_product_form" ).submit(function( event ) {
+            //   alert( "Handler for .submit() called." );
+            //   event.preventDefault();
+            //   debugger;
+            //   var data = {
+            //     item_name:$('#name').val(),
+            //     item_detail:$('#detail').val(),
+            //     item_price:$('#price').val(),
+            //     item_image:$('#image').val(),
+            //     owner:$('#owner').val(),
+            //     // csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+            //     csrfmiddlewaretoken:"{{ csrf_token }}"
+            //   }
+            //   console.log(data);
+            //   $.ajax({
+            //       type: "POST",
+            //       url: 'http://127.0.0.1:8000/create/',
+            //       data: data,
+            //       enctype: 'multipart/form-data'
+            //       dataType : 'json',
+            //       crossDomain: true,
+            //       success:  function (data) {
+            //                  alert("A Product has been created.");
+            //              }
+            //     });
+            //   });
+        </script>
    </body>
 </html>
+{% endblock %}
