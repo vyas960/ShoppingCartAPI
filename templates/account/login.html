@@ -1,0 +1,13 @@
+{% extends "shopApp/base.html"%}
+{% block body_block%}
+
+<div class="container" align="center">
+   <h1>Login Here</h1>
+   <form method="post">
+      {{form.as_p}}
+      {% csrf_token %}
+      <button type="submit" name="button">Login</button>
+   </form>
+   <!-- <a href="#">Change Password</a> -->
+</div>
+{% endblock %}

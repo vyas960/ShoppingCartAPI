@@ -10,6 +10,7 @@
 
    </head>
    <body> -->
+   <h1>Loging User : {{request.user|title}}</h1>
 
       <div class="container" align="center">
          <hr><h1>PRODUCTS LIST</h1><hr>
@@ -24,7 +25,7 @@
             </tr>
          </table>
 
-         <hr><button class="btn-lg btn btn-dark">Create Product</button><hr>
+         <!-- <hr><button class="btn-lg btn btn-dark">Create Product</button><hr> -->
 
          <div class="container" align="center">
              <hr><h1>PRODUCT DETAIL</h1><hr>
@@ -35,7 +36,7 @@
                     <th>PRODUCT NAME</th>
                     <th>PRODUCT PRICE</th>
                     <th>PRODUCT DETAIL</th>
-                    <th>SELLER</th>
+                    <th>OWNER</th>
                  </thead>
                  <tr>
                    <td id="ID"></td>
@@ -44,7 +45,7 @@
                    <td id="NAME"></td>
                    <td id="PRICE"></td>
                    <td id="DETAIL"></td>
-                   <td id="SELLER"></td>
+                   <td id="OWNER"></td>
                  </tr>
              </table><hr>
          </div>
@@ -59,7 +60,7 @@
               <input type="number" id="price"><br><br>
               <label for="image">Select image:</label>
               <input type="file" id="image" name="img" accept="image/*"><br><br>
-              <label for="Owner">Owner:</label><br>
+              <label for="owner">Owner:</label><br>
               <input type="text" id="owner" ><br><hr>
               <button id="Save"type="submit" class="btn-success" >Create New Product </button><hr>
               {{ csrf_token }}
@@ -97,7 +98,7 @@
                   $('#NAME').text(data.item_name);
                   $('#PRICE').text(data.item_price);
                   $('#DETAIL').text(data.item_detail);
-                  $('#SELLER').text(data.owner);
+                  $('#OWNER').text(data.owner);
              });
          }
          function destroy(id) {
@@ -115,45 +116,88 @@
                     });
             }
 
-            $(document).ready(function () {
-             $("#Save").click(function () {
-               var person = new Object();
-                  person.pname = $('#name').val();
-                  person.price = $('#price').val();
-                  person.product_detail = $('#detail').val();
-                  person.owner = $('#owner').val();
-                  console.log(person)
-                  var formData = new FormData();
-                  var file = $('#image')[0].files[0]
-                  var token = "{{ csrf_token }}"
-                  formData.append("item_image", file, file.name);
-                  formData.append("item_name", person.pname);
-                  formData.append("item_price", person.price);
-                  formData.append("item_detail", person.product_detail);
-                  formData.append("owner", person.owner);
-                  formData.append("csrfmiddlewaretoken", token);
-                  url = 'http://127.0.0.1:8000/create/'
-                  debugger
-                       $.ajax({
-                        type: "POST",
-                        enctype: 'multipart/form-data',
-                        url:url,
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        cache: false,
-                        timeout: 600000,
-                        success: function (data) {
-                          alert('product add successfully')
-                            console.log("SUCCESS : ", data);
-                        },
-                        error: function (data) {
-                          alert('something went wrong')
-                            console.log("ERROR : ", e);
-                        }
-                    });
-                   });
-              });
+
+                    $(document).ready(function () {
+                    $("#Save").click(function () {
+                      debugger;
+           var formData = new FormData();
+           var file = $('#image')[0].files[0]
+           var token = "{{ csrf_token }}"
+           var name = $('#name').val();
+           var price = $('#price').val();
+           var product_detail = $('#detail').val();
+           var owner =$('#owner').val();
+
+           formData.append("item_image", file, file.name);
+           formData.append("item_name", name);
+           formData.append("item_price", price);
+           formData.append("item_detail",product_detail);
+           formData.append("owner", owner);
+           formData.append("csrfmiddlewaretoken", token);
+           url = 'http://127.0.0.1:8000/create/'
+           // debugger
+                $.ajax({
+                 type: "POST",
+                 enctype: 'multipart/form-data',
+                 url:url,
+                 data: formData,
+                 processData: false,
+                 contentType: false,
+                 cache: false,
+                 timeout: 60000,
+                 success: function (data) {
+                   alert('product add successfully')
+                     console.log("SUCCESS : ", data);
+                 },
+                 error: function (data) {
+                   alert('something went wrong')
+                     console.log("ERROR : ", e);
+                 }
+             });
+            });
+          });
+
+
+// $(document).ready(function () {
+//  $("#Save").click(function () {
+//    var person = new Object();
+//       debugger;
+//       person.pname = $('#name').val();
+//       person.price = $('#price').val();
+//       person.product_detail = $('#detail').val();
+//       // person.owner = $('#owner').val();
+//       console.log(person)
+//       var formData = new FormData();
+//       var file = $('#image')[0].files[0]
+//       var token = "{{ csrf_token }}"
+//       formData.append("item_image", file, file.name);
+//       formData.append("item_name", person.pname);
+//       formData.append("item_price", person.price);
+//       formData.append("item_detail", person.product_detail);
+//       formData.append("owner", request.user);
+//       formData.append("csrfmiddlewaretoken", token);
+//       url = 'http://127.0.0.1:8000/create/'
+//       // debugger
+//            $.ajax({
+//             type: "POST",
+//             enctype: 'multipart/form-data',
+//             url:url,
+//             data: formData,
+//             processData: false,
+//             contentType: false,
+//             cache: false,
+//             timeout: 600000,
+//             success: function (data) {
+//               alert('product add successfully')
+//                 console.log("SUCCESS : ", data);
+//             },
+//             error: function (data) {
+//               alert('something went wrong')
+//                 console.log("ERROR : ", e);
+//             }
+//         });
+//        });
+//   });
 
             // $( "#new_product_form" ).submit(function( event ) {
             //   alert( "Handler for .submit() called." );

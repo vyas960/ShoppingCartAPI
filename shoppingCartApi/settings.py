@@ -14,7 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TEMPLATE_DIR=os.path.join(BASE_DIR,"templates")
+# TEMPLATE_DIR=os.path.join(BASE_DIR,"templates")
 STATIC_DIR=os.path.join(BASE_DIR,"static")
 
 
@@ -28,6 +28,9 @@ SECRET_KEY = 'aeit_63bw8$@k&dncr(&uf+1*h#)z*-kwg3hq4b*m@21w!gum+'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+
+
 
 
 # Application definition
@@ -44,8 +47,9 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'allauth',
     'allauth.account',
-
+    'allauth.socialaccount',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -64,13 +68,20 @@ REST_FRAMEWORK = {
          'rest_framework.authentication.BasicAuthentication',)
     }
 
+# REST_FRAMEWORK = {
+#     'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler'
+# }
+# REST_FRAMEWORK = {
+#     'EXCEPTION_HANDLER': 'shopApp.exception_handler_400.custom_exception_handler'
+# }
+
 
 ROOT_URLCONF = 'shoppingCartApi.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATE_DIR],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,6 +93,8 @@ TEMPLATES = [
         },
     },
 ]
+
+
 
 WSGI_APPLICATION = 'shoppingCartApi.wsgi.application'
 
@@ -134,7 +147,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES=[
+STATICFILES_DIRS=[
 STATIC_DIR,
 ]
 
@@ -148,7 +161,8 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
-
-
+LOGIN_REDIRECT_URL='/'
+LOGOUT_REDIRECT_URL='/'
+SIGNUP_REDIRECT_URL='/accounts/login/'
 
 # https://briancaffey.github.io/2017/07/22/posting-json-data-with-ajax-to-django-rest-framework.html

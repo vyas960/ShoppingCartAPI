@@ -7,13 +7,14 @@ class UserSerializer(serializers.ModelSerializer):
     products = serializers.PrimaryKeyRelatedField(many=True, queryset=Product.objects.all())
     class Meta:
         model = User
-        fields = ['id', 'username', 'products','owner']
+        fields = ['id', 'username', 'products']
 
 
 class ProductListSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Product
-        fields = ['id', 'item_name']
+        fields = ['id', 'item_name','owner']
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):

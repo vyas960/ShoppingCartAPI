@@ -1,15 +1,15 @@
 from django.shortcuts import render
 from rest_framework import generics
 from shopApp.serializers import ProductListSerializer, ProductDetailSerializer, ProductDestroySerializer, ProductUpdateSerializer, ProductCreateSerializer
-from rest_framework.views import APIView
+# from rest_framework.views import APIView
 from rest_framework import status
 from shopApp.forms import ProductCreateForm
 
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+# from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
-from django.contrib.auth.models import User
-from shopApp.serializers import UserSerializer
+# from django.contrib.auth.models import User
+# from shopApp.serializers import UserSerializer
 from rest_framework import generics,mixins
 from rest_framework import permissions
 from shopApp.permissions import IsOwnerOrReadOnly
@@ -19,9 +19,10 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from shopApp.models import Product
 from django.utils import timezone
-# from django.core.paginator import Paginator
 from django.http import HttpResponse
 from allauth.account.decorators import login_required
+
+
 
 # Create your views here.
 @login_required
@@ -31,13 +32,13 @@ def productListView(request):
 
 class ProductList(generics.ListAPIView):
 	queryset = Product.objects.all()
-	permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+	# permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 	serializer_class=ProductListSerializer
 
 
 class ProductDetail(generics.RetrieveAPIView):
 	queryset = Product.objects.all()
-	# permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+	permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 	def get(self, request, pk, format=None):
 		product = self.get_object()
 		serializer = ProductDetailSerializer(product)
@@ -45,17 +46,19 @@ class ProductDetail(generics.RetrieveAPIView):
 
 
 class ProductDestroy(generics.DestroyAPIView):
-	# permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 	queryset = Product.objects.all()
 	serializer_class = ProductDestroySerializer
 
 
 class ProductCreateView(generics.CreateAPIView):
 	# permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+	permission_classes = (IsAuthenticated,)
 	queryset = Product.objects.all()
 	serializer_class = ProductCreateSerializer
+
 	def perform_create(self, serializer):
 	   serializer.save(owner=self.request.user)
+
 
 
 
@@ -106,12 +109,12 @@ class ProductUpdateView(generics.UpdateAPIView):
 	# 	return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+# class UserList(generics.ListAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+# class UserDetail(generics.RetrieveAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
 
 # @api_view(['GET'])
 # def api_root(request, format=None):
