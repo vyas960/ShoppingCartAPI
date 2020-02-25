@@ -65,7 +65,8 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-         'rest_framework.authentication.BasicAuthentication',)
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',)
     }
 
 # REST_FRAMEWORK = {
@@ -163,6 +164,6 @@ SITE_ID = 1
 
 LOGIN_REDIRECT_URL='/'
 LOGOUT_REDIRECT_URL='/'
-SIGNUP_REDIRECT_URL='/accounts/login/'
+SIGNUP_REDIRECT_URL='/'
 
 # https://briancaffey.github.io/2017/07/22/posting-json-data-with-ajax-to-django-rest-framework.html

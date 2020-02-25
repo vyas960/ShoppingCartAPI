@@ -2,14 +2,6 @@
 <!DOCTYPE html>
 {% block body_block%}
 
-<!-- <html lang="en">
-   <head>
-      <meta charset="UTF-8">
-      <title></title>
-      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-   </head>
-   <body> -->
    <h1>Loging User : {{request.user|title}}</h1>
 
       <div class="container" align="center">
@@ -62,15 +54,31 @@
               <input type="file" id="image" name="img" accept="image/*"><br><br>
               <label for="owner">Owner:</label><br>
               <input type="text" id="owner" ><br><hr>
-              <button id="Save"type="submit" class="btn-success" >Create New Product </button><hr>
+              <button id="Save"type="submit" class="btn-success" >SUBMIT</button><hr>
               {{ csrf_token }}
             </div>
           </form>
+
+
+            <form id="update_product_form">
+              <div class="container" align="center">
+                <input type="text" id="u_id"  ><br>
+                <label for="name">Product Name:</label><br>
+                <input type="text" id="u_name" ><br>
+                <label for="detail">Product Detail:</label><br>
+                <input type="text" id="u_detail"><br>
+                <label for="price">Product Price:</label><br>
+                <input type="number" id="u_price"><br><br>
+                <button id="Update"type="submit" class="btn-success" >SUBMIT</button><hr>
+                {{ csrf_token }}
+              </div>
+            </form>
 
       </div>
 
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
       <script>
+        // var url = "{url ""}"
          $.get( "http://127.0.0.1:8000/products/", function( data ) {
              console.log(data)
              appendData(data);
@@ -83,12 +91,14 @@
 
              let id = data[i].id
              console.log(id)
-             tr.append('<td><button onclick="showDetail('+ id +')"class="btn-lg btn btn-dark">Product Detail</button></td>')
-             tr.append('<td><button onclick="destroy('+ id +')"class="btn-lg btn btn-dark">Delete Product</button></td>')
-             tr.append('<td><button onclick="update('+ id +')"class="btn-lg btn btn-dark">Update Product</button></td>')
+             tr.append('<td><button onclick = "showDetail('+ id +')" class="btn-lg btn btn-dark">Product Detail</button></td>')
+             tr.append('<td><button onclick = "destroy('+ id +')" class="btn-lg btn btn-dark">Delete Product</button></td>')
+             tr.append('<td><button onclick = "updatef('+ id +')" class="btn-lg btn btn-dark">Update Product</button></td>')
              $('#list').append(tr);
          }
          }
+
+
          function showDetail(id) {
            console.log(id);
            $.get( "http://127.0.0.1:8000/products/"+id+"/", function( data ) {
@@ -101,6 +111,8 @@
                   $('#OWNER').text(data.owner);
              });
          }
+
+
          function destroy(id) {
            console.log(id);
            url = "http://127.0.0.1:8000/products/"+id+"/destroy/"
@@ -112,14 +124,28 @@
                 data: data,
                 success: function (data) {
                     alert("A Product has been deleted.");
+                    window.location.reload()
                 }
                     });
             }
 
 
-                    $(document).ready(function () {
-                    $("#Save").click(function () {
-                      debugger;
+            function updatef(id) {
+              console.log(id);
+              $.get( "http://127.0.0.1:8000/products/"+id+"/", function( data ) {
+                     console.log("data is", data)
+                     $('#u_id').val(data.id);
+                     $('#u_name').val(data.item_name);
+                     $('#u_price').val(data.item_price);
+                     $('#u_detail').val(data.item_detail);
+                });
+            }
+
+
+          // CREATE PRODUCT
+          $(document).ready(function () {
+          $("#Save").click(function () {
+           // debugger;
            var formData = new FormData();
            var file = $('#image')[0].files[0]
            var token = "{{ csrf_token }}"
@@ -148,6 +174,7 @@
                  success: function (data) {
                    alert('product add successfully')
                      console.log("SUCCESS : ", data);
+                     window.location.reload()
                  },
                  error: function (data) {
                    alert('something went wrong')
@@ -156,6 +183,47 @@
              });
             });
           });
+
+
+        // UPDATE PRODUCTS INFORMATIONS
+              $(document).ready(function () {
+              $("#Update").click(function () {
+               debugger;
+               var formData = new FormData();
+               var u_id = $('#u_id').val();
+               var token = "{{ csrf_token }}"
+               var name = $('#u_name').val();
+               var price = $('#u_price').val();
+               var product_detail = $('#u_detail').val();
+               url = "http://127.0.0.1:8000/update/"+u_id+"/";
+
+
+               formData.append("item_name", name);
+               formData.append("item_price", price);
+               formData.append("item_detail",product_detail);
+               formData.append("csrfmiddlewaretoken", token);
+                    $.ajax({
+                     type: "PATCH",
+                     enctype: 'multipart/form-data',
+                     url:url,
+                     data: formData,
+                     processData: false,
+                     contentType: false,
+                     cache: false,
+                     timeout: 60000,
+                     success: function (data) {
+                       alert('product Updated successfully')
+                         console.log("SUCCESS : ", data);
+                         // window.location.reload()
+                     },
+                     error: function (data) {
+                       alert('something went wrong')
+                         console.log("ERROR : ", e);
+                     }
+                 });
+                });
+              });
+
 
 
 // $(document).ready(function () {

@@ -5,7 +5,4 @@ from shopApp.models import Product,Cart,Order
 
 class ProductAdmin(admin.ModelAdmin):
 	list_display=['id','item_name','item_detail','item_price']
-
-
-
 admin.site.register(Product,ProductAdmin)

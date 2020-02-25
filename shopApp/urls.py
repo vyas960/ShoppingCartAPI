@@ -5,11 +5,11 @@ from shopApp import views
 
 urlpatterns = [
      path('', views.productListView),
-     path('products/', views.ProductList.as_view()),
-     path('products/<int:pk>/', views.ProductDetail.as_view()),
-     path('products/<int:pk>/destroy/', views.ProductDestroy.as_view()),
-     path('create/', views.ProductCreateView.as_view()),
-     path('update/<int:pk>/', views.ProductUpdateView.as_view() ),
+     path('products/', views.ProductList.as_view(), name="ProductList"),
+     path('products/<int:pk>/', views.ProductDetail.as_view(), name="ProducDetail"),
+     path('products/<int:pk>/destroy/', views.ProductDestroy.as_view(), name="ProductDestroy"),
+     path('create/', views.ProductCreateView.as_view(), name="ProductCreate"),
+     path('update/<int:pk>/', views.ProductUpdateView.as_view(), name="ProductUpdate"),
 
 
      #path('abc/<int:pk>/', views.ProductDetailabc.as_view()),

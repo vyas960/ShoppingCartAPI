@@ -37,6 +37,10 @@ class ProductCreateSerializer(serializers.ModelSerializer):
 
 
 class ProductUpdateSerializer(serializers.ModelSerializer):
+    item_name = serializers.CharField(required=False)
+    item_detail = serializers.CharField(required=False)
+    item_image = serializers.ImageField(max_length=None, use_url=True,required=False)
+    item_price = serializers.FloatField(required=False)
     class Meta:
         model = Product
         fields = '__all__'

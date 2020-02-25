@@ -38,7 +38,7 @@ class ProductList(generics.ListAPIView):
 
 class ProductDetail(generics.RetrieveAPIView):
 	queryset = Product.objects.all()
-	permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+	#permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 	def get(self, request, pk, format=None):
 		product = self.get_object()
 		serializer = ProductDetailSerializer(product)
@@ -51,20 +51,71 @@ class ProductDestroy(generics.DestroyAPIView):
 
 
 class ProductCreateView(generics.CreateAPIView):
-	# permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+	permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 	permission_classes = (IsAuthenticated,)
 	queryset = Product.objects.all()
 	serializer_class = ProductCreateSerializer
 
-	def perform_create(self, serializer):
-	   serializer.save(owner=self.request.user)
+	# def perform_create(self, serializer):
+	#    serializer.save(owner=self.request.user)
 
 
 
 
 class ProductUpdateView(generics.UpdateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductUpdateSerializer
+	# permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+	# permission_classes = (IsAuthenticated,)
+	queryset = Product.objects.all()
+	serializer_class = ProductUpdateSerializer
+
+	def update(self, request, *args, **kwargs):
+		partial = True
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		self.perform_update(serializer)
+		return Response(serializer.data)
+
+
+
+
+# class ProductUpdateView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductUpdateSerializer
+#     # def get(self, request, *args, **kwargs):
+#     #     return self.retrieve(request, *args, **kwargs)
+#     def put(self, request, *args, **kwargs):
+#         return self.update(request, *args, **kwargs)
+#     def patch(self, request, *args, **kwargs):
+#         return self.partial_update(request, *args, **kwargs)
+
+	# def update(self, request, *args, **kwargs):
+	# 	partial = kwargs.pop('partial', False)
+	# 	self.object = None
+	# 	try:
+	# 		self.object = self.get_object()
+	# 	except Http404:
+    #         # If this is a PUT-as-create operation, we need to ensure that
+    #         # we have relevant permissions, as if this was a POST request.
+	# 		self.check_permissions(clone_request(request, 'POST'))
+	# 		created = True
+	# 		save_kwargs = {'force_insert': True}
+	# 		success_status_code = status.HTTP_201_CREATED
+	# 	else:
+	# 		created = False
+	# 		save_kwargs = {'force_update': True}
+	# 		success_status_code = status.HTTP_200_OK
+	#
+	# 	serializer = self.get_serializer(self.object, data=request.data, partial=partial)
+	#
+	# 	if serializer.is_valid():
+	# 		self.pre_save(serializer.object)
+	# 		self.object = serializer.save(**save_kwargs)
+	# 		self.post_save(self.object, created=created)
+	# 		return Response(serializer.data, status=success_status_code)
+	# 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 
