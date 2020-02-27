@@ -4,24 +4,27 @@
 
    <h1>Loging User : {{request.user|title}}</h1>
 
-      <div class="container" align="center">
-         <hr><h1>PRODUCTS LIST</h1><hr>
-         <table id="list" border=10px>
-           <thead>
-             <th>PRODUCTS</th>
-             <th>DETAILS</th>
-             <th>DELETE</th>
-             <th>UPDATE</th>
-           </thead>
-            <tr>
-            </tr>
-         </table>
+   <div class="container" align="center">
+      <hr><h1>PRODUCTS LIST</h1><hr>
+      <table id="list" border=10px>
+        <thead>
+          <th>PRODUCTS</th>
+          <th>DETAILS</th>
+          <th>DELETE</th>
+          <th>UPDATE</th>
+        </thead>
+         <tr>
+         </tr>
+      </table>
 
-         <!-- <hr><button class="btn-lg btn btn-dark">Create Product</button><hr> -->
+            <!-- <th colspan="3">
+                <center>SELECT</center>
+            </th> -->
+
 
          <div class="container" align="center">
              <hr><h1>PRODUCT DETAIL</h1><hr>
-             <table border=10px>
+             <table border=10px >
                  <thead>
                     <th>PRODUCT ID</th>
                     <th>PRODUCT IMAGE</th>
@@ -42,26 +45,31 @@
              </table><hr>
          </div>
 
-          <form id="new_product_form">
+          <form>
             <div class="container" align="center">
+              <input type="text" id="owner"hidden ><br><hr>
               <label for="name">Product Name:</label><br>
               <input type="text" name="name" id="name" ><br>
+              <div id="name_error" style="color: red;" class="hide"> </div><br>
               <label for="detail">Product Detail:</label><br>
               <input type="text" id="detail"><br>
               <label for="price">Product Price:</label><br>
-              <input type="number" id="price"><br><br>
+              <input type="number" id="price"><br>
+              <div id="price_error" style="color: red;" class="hide"> </div>
+              <br>
               <label for="image">Select image:</label>
               <input type="file" id="image" name="img" accept="image/*"><br><br>
-              <label for="owner">Owner:</label><br>
-              <input type="text" id="owner" ><br><hr>
-              <button id="Save"type="submit" class="btn-success" >SUBMIT</button><hr>
+
+              <hr>
               {{ csrf_token }}
             </div>
           </form>
+          <button id="Save" class="btn-success" >CREATE</button>
 
 
             <form id="update_product_form">
               <div class="container" align="center">
+                <label for="name">Product Id:</label><br>
                 <input type="text" id="u_id"  ><br>
                 <label for="name">Product Name:</label><br>
                 <input type="text" id="u_name" ><br>
@@ -69,7 +77,7 @@
                 <input type="text" id="u_detail"><br>
                 <label for="price">Product Price:</label><br>
                 <input type="number" id="u_price"><br><br>
-                <button id="Update"type="submit" class="btn-success" >SUBMIT</button><hr>
+                <button id="Update" class="btn-success" >UPDATE</button><hr>
                 {{ csrf_token }}
               </div>
             </form>
@@ -77,75 +85,9 @@
       </div>
 
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-      <script>
-        // var url = "{url ""}"
-         $.get( "http://127.0.0.1:8000/products/", function( data ) {
-             console.log(data)
-             appendData(data);
-           });
-         function appendData(data) {
-         var tr;
-         for (var i = 0; i < data.length; i++) {
-             tr = $('<tr/>');
-             tr.append("<td>" + data[i].item_name + "</td>");
-
-             let id = data[i].id
-             console.log(id)
-             tr.append('<td><button onclick = "showDetail('+ id +')" class="btn-lg btn btn-dark">Product Detail</button></td>')
-             tr.append('<td><button onclick = "destroy('+ id +')" class="btn-lg btn btn-dark">Delete Product</button></td>')
-             tr.append('<td><button onclick = "updatef('+ id +')" class="btn-lg btn btn-dark">Update Product</button></td>')
-             $('#list').append(tr);
-         }
-         }
-
-
-         function showDetail(id) {
-           console.log(id);
-           $.get( "http://127.0.0.1:8000/products/"+id+"/", function( data ) {
-              console.log(data)
-                  $('#ID').text(data.id);
-                  $('#IMAGE').text(data.item_image);
-                  $('#NAME').text(data.item_name);
-                  $('#PRICE').text(data.item_price);
-                  $('#DETAIL').text(data.item_detail);
-                  $('#OWNER').text(data.owner);
-             });
-         }
-
-
-         function destroy(id) {
-           console.log(id);
-           url = "http://127.0.0.1:8000/products/"+id+"/destroy/"
-           data = {csrfmiddlewaretoken: "{{ csrf_token }}" }
-           debugger
-             $.ajax({
-                url: url,
-                type:"DELETE",
-                data: data,
-                success: function (data) {
-                    alert("A Product has been deleted.");
-                    window.location.reload()
-                }
-                    });
-            }
-
-
-            function updatef(id) {
-              console.log(id);
-              $.get( "http://127.0.0.1:8000/products/"+id+"/", function( data ) {
-                     console.log("data is", data)
-                     $('#u_id').val(data.id);
-                     $('#u_name').val(data.item_name);
-                     $('#u_price').val(data.item_price);
-                     $('#u_detail').val(data.item_detail);
-                });
-            }
-
-
-          // CREATE PRODUCT
-          $(document).ready(function () {
+      <script type="text/javascript">
+      // CREATE PRODUCT
           $("#Save").click(function () {
-           // debugger;
            var formData = new FormData();
            var file = $('#image')[0].files[0]
            var token = "{{ csrf_token }}"
@@ -171,18 +113,102 @@
                  contentType: false,
                  cache: false,
                  timeout: 60000,
-                 success: function (data) {
+                 success: function (data) {debugger
                    alert('product add successfully')
                      console.log("SUCCESS : ", data);
                      window.location.reload()
+
                  },
-                 error: function (data) {
-                   alert('something went wrong')
-                     console.log("ERROR : ", e);
+                 error: function (data) {debugger
+                    error_json = data.responseJSON
+                    jQuery.each(error_json, function(key, val) {
+                        if(key == "item_price"){
+                            error_msg = val[0]
+                            debugger
+                            $("#price_error").text(error_msg)
+                            $("#price_error").removeClass("hide")
+
+                        }
+                        if(key == "item_name"){
+                            error_msg = val[0]
+                            debugger
+                            $("#name_error").text(error_msg)
+                            $("#name_error").removeClass("hide")
+
+                        }
+                    });
                  }
-             });
-            });
+               });
           });
+      </script>
+      <script>
+        // var url = "{url ""}"
+         $.get( "http://127.0.0.1:8000/products/", function( data ) {
+             console.log(data)
+             appendData(data);
+           });
+         function appendData(data) {
+         var tr;
+         for (var i = 0; i < data.length; i++) {
+             tr = $('<tr/>');
+             tr.append("<td>" + data[i].item_name + "</td>");
+
+             let id = data[i].id
+             console.log(id)
+             tr.append('<td><button onclick = "showDetail('+ id +')" class="btn-lg btn btn-dark">Product Detail</button></td>')
+             tr.append('<td><button onclick = "destroy('+ id +')" class="btn-lg btn btn-dark">Delete Product</button></td>')
+             tr.append('<td><button onclick = "updatef('+ id +')" class="btn-lg btn btn-dark">Update Product</button></td>')
+             $('#list').append(tr);
+         }
+         }
+
+         function showDetail(id) {
+           console.log(id);
+           $.get( "http://127.0.0.1:8000/products/"+id+"/", function( data ) {
+                  console.log(data)
+                  $('#ID').text(data.id);
+                  $('#IMAGE').text(data.item_image);
+                  $('#NAME').text(data.item_name);
+                  $('#PRICE').text(data.item_price);
+                  $('#DETAIL').text(data.item_detail);
+                  $('#OWNER').text(data.owner);
+             });
+         }
+
+
+         function destroy(id) {
+           console.log(id);
+           // url = "http://127.0.0.1:8000/products/"+id+"/destroy/"
+           url = 'http://127.0.0.1:8000/products/'+id+'/destroy/'
+           data = {csrfmiddlewaretoken: "{{ csrf_token }}" },
+           console.log(data)
+           // debugger
+             $.ajax({
+                url: url,
+                type:"DELETE",
+                data: data,
+                success: function (data) {
+                    alert("A Product has been deleted.");
+                    window.location.reload()
+                    }
+                  });
+            }
+
+
+            function updatef(id) {
+              // debugger
+              console.log(id);
+              $.get( "http://127.0.0.1:8000/products/"+id+"/", function( data ) {
+                     console.log("data is", data)
+                     $('#u_id').val(data.id);
+                     $('#u_name').val(data.item_name);
+                     $('#u_price').val(data.item_price);
+                     $('#u_detail').val(data.item_detail);
+                });
+            }
+
+
+
 
 
         // UPDATE PRODUCTS INFORMATIONS
@@ -196,12 +222,17 @@
                var price = $('#u_price').val();
                var product_detail = $('#u_detail').val();
                url = "http://127.0.0.1:8000/update/"+u_id+"/";
-
-
-               formData.append("item_name", name);
-               formData.append("item_price", price);
-               formData.append("item_detail",product_detail);
-               formData.append("csrfmiddlewaretoken", token);
+               // formData.append("item_name", name);
+               // formData.append("item_price", price);
+               // formData.append("item_detail",product_detail);
+               // formData.append("csrfmiddlewaretoken", token);
+               data = {
+                        'item_name' :name,
+                        'item_price': price,
+                        'item_detail' : product_detail,
+                        'csrfmiddlewaretoken' : '{{ csrf_token }}',
+               }
+               console.log(data);
                     $.ajax({
                      type: "PATCH",
                      enctype: 'multipart/form-data',
@@ -294,6 +325,28 @@
             //     });
             //   });
         </script>
+
+
    </body>
 </html>
 {% endblock %}
+
+
+<!-- //          $.ajax({
+//     url: 'http://127.0.0.1:8000/products/',
+//     type: "GET",
+//     success: function appendData(data) {
+//         var tr;
+//         for (var i = 0; i < data.length; i++) {
+//             tr = $('<tr>');
+//             // tr.append("<td>" + data[i].id + "</td>");
+//             tr.append("<td>" + data[i].item_name + "</td>");
+//             let id = data[i].id
+//             console.log(id)
+//             tr.append('<td><button onclick="showDetail(' + id + ')"class="btn-lg btn btn-light">Product Detail</button></td>')
+//             tr.append('<td><button onclick="destroy(' + id + ')"class="btn-lg btn btn-light">Delete Product</button></td>')
+//             tr.append('<td><button onclick="update(' + id + ')"class="btn-lg btn btn-light">Update Product</button></td>')
+//             $('#list').append(tr);
+//         }
+//     }
+// }) -->

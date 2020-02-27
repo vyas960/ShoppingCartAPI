@@ -66,8 +66,9 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',)
+        'rest_framework.authentication.BasicAuthentication',),
     }
+
 
 # REST_FRAMEWORK = {
 #     'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler'
