@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics
-from shopApp.serializers import ProductListSerializer, ProductDetailSerializer, ProductDestroySerializer,ProductUpdateSerializer, ProductCreateSerializer, UserSerializer, ProductWithUserSerializers, UserCreateSerializer, CustomerSerializer
+from shopApp.serializers import ProductListSerializer, ProductDetailSerializer, ProductDestroySerializer,ProductUpdateSerializer, ProductCreateSerializer, UserSerializer,  UserCreateSerializer, CustomerSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -19,17 +19,11 @@ from django.views.decorators.csrf import csrf_exempt
 # from shopApp.permissions import IsOwnerOrReadOnly
 # from rest_framework.permissions import IsAuthenticated
 
-
 # Create your views here.
 
 # @login_required
 def productListView(request):
 	return render(request, 'shopApp/home.html')
-
-
-class ProductWithUser(generics.RetrieveAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductWithUserSerializers
 
 
 class ProductList(generics.ListAPIView):
@@ -72,13 +66,13 @@ class ProductUpdateView(generics.UpdateAPIView):
 	def perform_update(self, serializer):
 	   serializer.save(owner=self.request.user)
 
-	# def update(self, request, *args, **kwargs):
-	# 	partial = True
-	# 	instance = self.get_object()
-	# 	serializer = self.get_serializer(instance, data=request.data, partial=partial)
-	# 	serializer.is_valid(raise_exception=True)
-	# 	self.perform_update(serializer)
-	# 	return Response(serializer.data)
+	def update(self, request, *args, **kwargs):
+		partial = True
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		self.perform_update(serializer)
+		return Response(serializer.data)
 
 
 class UserList(generics.ListAPIView):
@@ -94,3 +88,13 @@ class UserCreate(generics.CreateAPIView):
 class CustomerDetail(generics.ListAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+
+
+# class ProductWithCustomer(generics.CreateAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductWithCustomerSerializers
+
+
+# class ProductWithUser(generics.RetrieveAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductWithUserSerializers

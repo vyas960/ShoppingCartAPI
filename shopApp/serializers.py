@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from shopApp.models import Product, Cart, Order, Customer
+from shopApp.models import Product, Customer
 
 
 
@@ -59,13 +59,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username','email']
 
-class CustomerSerializer(serializers.ModelSerializer):
-    #products = serializers.PrimaryKeyRelatedField(many=True, queryset=Product.objects.all())
-    class Meta:
-        model = Customer
-        fields = '__all__'
-
-
 
 class UserCreateSerializer(serializers.ModelSerializer):
     #products = serializers.PrimaryKeyRelatedField(many=True, queryset=Product.objects.all())
@@ -74,9 +67,33 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProductWithUserSerializers(serializers.ModelSerializer):
-    owner= UserSerializer()
-    customer = CustomerSerializer()
+# class ProductWithUserSerializers(serializers.ModelSerializer):
+#     owner= UserSerializer()
+#     customer = CustomerSerializer()
+#     class Meta:
+#        model =Product
+#        fields = ('id','item_name','owner','customer')
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    #products = serializers.PrimaryKeyRelatedField(many=True, queryset=Product.objects.all())
     class Meta:
-       model =Product
-       fields = ('id','item_name','owner','customer')
+        model = Customer
+        fields = '__all__'
+
+
+# class ProductWithCustomerSerializers(serializers.ModelSerializer):
+#     customer = CustomerSerializer(many=True)
+#     class Meta:
+#         model = Product
+#         fields = ('id','item_name','customer')
+#
+#     def create(self, validated_data):
+#         customer_data = validated_data.pop('Customer')
+#         product = Product.objects.create(**validated_data)
+#         for customer_data in customer_data:
+#             Customer.objects.create(product=product, **customer_data)
+#         return product
+#     serializer = ProductWithCustomerSerializers(data=data)
+# 	if serializer.is_valid()
+#         serializer.save()

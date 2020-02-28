@@ -10,7 +10,7 @@ urlpatterns = [
      path('products/<int:pk>/destroy/', views.ProductDestroy.as_view(), name="ProductDestroy"),
      path('create/', views.ProductCreateView.as_view(), name="ProductCreate"),
      path('update/<int:pk>/', views.ProductUpdateView.as_view(), name="ProductUpdate"),
-     path('pnu/<int:pk>/', views.ProductWithUser.as_view(), name="Product"),
+     # path('pnu/<int:pk>/', views.ProductWithUser.as_view(), name="Product"),
 
 
 
@@ -18,6 +18,7 @@ urlpatterns = [
      path('users/<int:pk>/', views.UserDetail.as_view()),
      path('createuser/', views.UserCreate.as_view()),
      path('customer/', views.CustomerDetail.as_view()),
+     # path('pnc/', views.ProductWithCustomer.as_view()),
      #path('abc/<int:pk>/', views.ProductDetailabc.as_view()),
      # path('', views.api_root),
      # path('list/', views.ProductListView.as_view(), name='product-list'),

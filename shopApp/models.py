@@ -20,20 +20,3 @@ class Product(models.Model):
 
 	def __str__(self):
 		return self.item_name
-
-class Cart(models.Model):
-	quantity=models.IntegerField(default=1)
-	amount=models.FloatField(default=0.0)
-	product=models.ForeignKey(Product, on_delete=models.CASCADE)
-	user = models.ForeignKey(User,blank=True, null=True, on_delete=models.CASCADE)
-	def __str__(self):
-		return self.product.item_name
-
-class Order(models.Model):
-	grandTotal=models.FloatField(default=0)
-	product=models.ForeignKey(Product,on_delete=models.CASCADE, blank=True, null=True)
-	user = models.ForeignKey(User,blank=True, null=True, on_delete=models.CASCADE)
-	quantity=models.IntegerField(default=1)
-	amount=models.FloatField(default=0.0)
-	def __str__(self):
-		return self.product.item_name
